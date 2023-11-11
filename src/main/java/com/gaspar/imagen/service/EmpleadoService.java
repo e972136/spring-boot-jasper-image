@@ -29,30 +29,11 @@ public class EmpleadoService {
         return empleadoRepository.findAll();
     }
 
-    public String exportReport(String reportFormat) throws FileNotFoundException, JRException {
-        String path ="Q:\\Descargas\\pizzaty.pdf";
-        List<Empleado> empleados = empleadoRepository.findAll();
-//        load file and compile
-        File file = ResourceUtils.getFile("classpath:pizzati.jrxml");
-        JasperReport jasperReport= JasperCompileManager.compileReport(file.getAbsolutePath());
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(empleados);
-        Map<String,Object> map = new HashMap<>();
-//        map.put("logo",readImage("logo.png","png"));
-        byte[] logo = companyRepository.findById(1).get().getLogo();
-//        map.put("logo",readImage("logo.png","png"));
-        map.put("logo", new ByteArrayInputStream(logo));
-        System.out.println(map);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,map,dataSource);
-        JasperExportManager.exportReportToPdfFile(jasperPrint,path);
-
-        return "";
-    }
-
     public InputStream readImage(String fileName, String imageFormat){
         InputStream inputStream = null;
         File file = null;
         try{
-            file = new File(fileFullPath("logo.png",""));
+            file = new File(fileFullPath(fileName+"."+imageFormat,""));
 
             BufferedImage bufferedImage = ImageIO.read(file);
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -72,10 +53,39 @@ public class EmpleadoService {
     public String fileFullPath(String fileName, String path){
         String filePath = null;
         StringBuilder builder = new StringBuilder();
-
         filePath = builder.append("").append(path).append(fileName).toString().replace("/","\\");
-
         return filePath;
 
+    }
+
+    public String exportReportBD(int company, String pdf) throws FileNotFoundException, JRException {
+        String path ="Q:\\Descargas\\pizzaty.pdf";
+
+        List<Empleado> empleados = empleadoRepository.findAll();
+//        load file and compile
+        File file = ResourceUtils.getFile("classpath:pizzati.jrxml");
+        JasperReport jasperReport= JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(empleados);
+        Map<String,Object> map = new HashMap<>();
+        byte[] logo = companyRepository.findById(company).get().getLogo();
+        map.put("logo", new ByteArrayInputStream(logo));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,map,dataSource);
+        JasperExportManager.exportReportToPdfFile(jasperPrint,path);
+        return "";
+    }
+
+    public String exportReportLocal(String pdf) throws FileNotFoundException, JRException {
+        String path ="Q:\\Descargas\\pizzaty.pdf";
+
+        List<Empleado> empleados = empleadoRepository.findAll();
+//        load file and compile
+        File file = ResourceUtils.getFile("classpath:pizzati.jrxml");
+        JasperReport jasperReport= JasperCompileManager.compileReport(file.getAbsolutePath());
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(empleados);
+        Map<String,Object> map = new HashMap<>();
+        map.put("logo",readImage("logo_u","png"));
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,map,dataSource);
+        JasperExportManager.exportReportToPdfFile(jasperPrint,path);
+        return "";
     }
 }
