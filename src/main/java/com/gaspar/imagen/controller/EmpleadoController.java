@@ -43,6 +43,13 @@ public class EmpleadoController {
         return empleadoService.exportReportLocal("pdf");
     }
 
+    @GetMapping("/reporte_imagen_bd_url/{company}")
+    public String generarBDUrl(
+            @PathVariable int company
+    ) throws JRException, FileNotFoundException {
+        return empleadoService.exportReportBdUrl(company,"pdf");
+    }
+
     @GetMapping("/hacer")
     public ResponseEntity<Resource> descargar(){
         String directorioArchivos = "Q:\\Descargas\\";

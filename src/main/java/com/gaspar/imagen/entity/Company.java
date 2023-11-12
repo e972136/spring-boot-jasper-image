@@ -1,11 +1,9 @@
 package com.gaspar.imagen.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Data
@@ -17,4 +15,7 @@ public class Company {
     String nombre;
 
     byte[] logo;
+
+    @Column(name = "img_url")
+    String imgUrl;
 }
